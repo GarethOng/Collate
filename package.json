@@ -1,0 +1,37 @@
+{
+  "name": "collate",
+  "version": "1.0.0",
+  "description": "This repo contains our National University of Singapore CP2106: Independent Software Development Project",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "server": "nodemon server --ignore client",
+    "client": "npm start --prefix client",
+    "start": "concurrently --kill-others-on-fail \"npm run server\" \" npm run client\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GarethOng/Collate.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GarethOng/Collate/issues"
+  },
+  "homepage": "https://github.com/GarethOng/Collate#readme",
+  "devDependencies": {
+    "concurrently": "^7.2.1",
+    "nodemon": "^2.0.16"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "express-async-errors": "^3.1.1",
+    "http-status-codes": "^2.2.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.3.4",
+    "validator": "^13.7.0"
+  }
+}
