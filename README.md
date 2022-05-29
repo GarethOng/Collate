@@ -18,3 +18,9 @@ npm install
 cd client
 npm install
 ```
+
+# Running the code
+Run using concurrently, server running on http://localhost:5001 and client on http://localhost:3000
+```
+npm start
+```
