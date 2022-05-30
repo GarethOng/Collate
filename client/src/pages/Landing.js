@@ -7,9 +7,7 @@ import { Link } from 'react-router-dom'
 function Landing() {
   return (
     <Wrapper>
-      <nav>
-        <Logo />
-      </nav>
+      <Logo />
       <div className='container page'>
         <div className='info'>
           <h1>
