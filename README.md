@@ -12,6 +12,9 @@ Owen Li (Mechanical Engineering and Innovation and Design)
 
 Collate aims to benefit users by creating a free to use all-in-one communication platform that captures all the interactions (chat messages, images, videos) received across various social media and messaging apps.
 
+# Deployment
+https://collate-nus.herokuapp.com/landing
+
 # Installing the dependencies
 ```
 npm install
