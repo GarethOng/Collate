@@ -46,7 +46,42 @@ const login = async (req, res) => {
 }
 
 const updateUser = async (req, res) => {
-  res.send('updateUser')
+  const { email, name, lastName, location } = req.body
+  if (!email) {
+    throw new BadRequestError('no email')
+  }
+  if (!name) {
+    throw new BadRequestError('name')
+  }
+  if (!lastName) {
+    throw new BadRequestError('no lastName')
+  }
+  if (!location) {
+    throw new BadRequestError('no location')
+  }
+  if (!email || !name || !lastName || !location) {
+    throw new BadRequestError('Please provide all values')
+  }
+
+  const user = await User.findOne({ _id: req.user.userId })
+
+  user.email = email
+  user.name = name
+  user.lastName = lastName
+  user.location = location
+
+  await user.save()
+
+  const token = user.createJWT()
+  res.status(StatusCodes.OK).json({
+    user,
+    token,
+    location: user.location,
+  })
 }
 
-export { register, login, updateUser }
+const loginGoogle = async (res, req, next) => {
+  res.send('<a href="/auth/google">Authenticate with Google </a>')
+}
+
+export { register, login, updateUser, loginGoogle }

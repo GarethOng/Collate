@@ -25,11 +25,11 @@ const UserSchema = new mongoose.Schema({
     minlength: 6,
     select: false,
   },
-  LastName: {
+  lastName: {
     type: String,
     maxlength: 20,
     trim: true,
-    default: 'LastName',
+    default: 'lastName',
   },
   location: {
     type: String,
@@ -37,9 +37,18 @@ const UserSchema = new mongoose.Schema({
     trim: true,
     default: 'my city',
   },
+  google: {
+    id: {
+      type: String,
+    },
+    acessToken: {
+      type: String,
+    },
+  },
 })
 
 UserSchema.pre('save', async function () {
+  if (!this.isModified('password')) return
   const salt = await bcrypt.genSalt(10)
   this.password = await bcrypt.hash(this.password, salt)
 })

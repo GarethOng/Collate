@@ -9,6 +9,14 @@ import {
   LOGIN_USER_BEGIN,
   LOGIN_USER_SUCCESS,
   LOGIN_USER_ERROR,
+  TOGGLE_SIDEBAR,
+  LOGOUT_USER,
+  UPDATE_USER_BEGIN,
+  UPDATE_USER_SUCCESS,
+  UPDATE_USER_ERROR,
+  SYNC_GOOGLE_BEGIN,
+  SYNC_GOOGLE_SUCCESS,
+  SYNC_GOOGLE_ERROR,
 } from './action'
 import axios from 'axios'
 
@@ -24,16 +32,45 @@ const initialState = {
   user: user ? JSON.parse(user) : null,
   token: token,
   userLocation: location || '',
+  showSidebar: false,
+  googletoken: null,
 }
 
 const AppContext = React.createContext()
 
 const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState)
+
+  const authFetch = axios.create({
+    baseURL: '/api/v1',
+  })
+
+  authFetch.interceptors.request.use(
+    (config) => {
+      config.headers.common['Authorization'] = `Bearer ${state.token}`
+      return config
+    },
+    (error) => {
+      return Promise.reject(error)
+    }
+  )
+
+  authFetch.interceptors.response.use(
+    (response) => {
+      return response
+    },
+    (error) => {
+      if (error.response.status === 401) {
+        logoutUser()
+      }
+      return Promise.reject(error)
+    }
+  )
   const displayAlert = () => {
     dispatch({ type: DISPLAY_ALERT })
     clearAlert()
   }
+
   const clearAlert = () => {
     setTimeout(() => {
       dispatch({ type: CLEAR_ALERT })
@@ -95,9 +132,59 @@ const AppProvider = ({ children }) => {
     clearAlert()
   }
 
+  const toggleSidebar = () => {
+    dispatch({ type: TOGGLE_SIDEBAR })
+  }
+
+  const logoutUser = () => {
+    dispatch({ type: LOGOUT_USER })
+    removeUserFromLocalStorage()
+  }
+
+  const updateUser = async (currentUser) => {
+    dispatch({ type: UPDATE_USER_BEGIN })
+    try {
+      const { data } = await authFetch.patch('/auth/updateUser', currentUser)
+      const { user, location, token } = data
+      dispatch({
+        type: UPDATE_USER_SUCCESS,
+        payload: { user, location, token },
+      })
+      addUserToLocalStorage({ user, location, token })
+    } catch (error) {
+      if (error.response.status !== 401) {
+        dispatch({
+          type: UPDATE_USER_ERROR,
+          payload: { msg: error.response.data.msg },
+        })
+      }
+    }
+    clearAlert()
+  }
+
+  const syncGmail = async (access_token) => {
+    dispatch({ type: SYNC_GOOGLE_BEGIN })
+    if (access_token !== undefined) {
+      dispatch({ type: SYNC_GOOGLE_SUCCESS, payload: { access_token } })
+      localStorage.setItem('googletoken', access_token)
+    } else {
+      dispatch({ type: SYNC_GOOGLE_ERROR })
+    }
+    clearAlert()
+  }
+
   return (
     <AppContext.Provider
-      value={{ ...state, displayAlert, registerUser, loginUser }}
+      value={{
+        ...state,
+        displayAlert,
+        registerUser,
+        loginUser,
+        toggleSidebar,
+        logoutUser,
+        updateUser,
+        syncGmail,
+      }}
     >
       {children}
     </AppContext.Provider>

@@ -48,7 +48,7 @@ const Wrapper = styled.aside`
   .nav-link {
     display: flex;
     align-items: center;
-    color: var(--grey-500);
+    color: var(--grey-400);
     padding: 1rem 0;
     text-transform: capitalize;
     transition: var(--transition);
@@ -67,10 +67,10 @@ const Wrapper = styled.aside`
     transition: var(--transition);
   }
   .active {
-    color: var(--grey-900);
+    color: var(--black);
   }
   .active .icon {
-    color: var(--primary-500);
+    color: var(--black);
   }
 `
 export default Wrapper
