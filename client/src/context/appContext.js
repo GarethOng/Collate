@@ -17,6 +17,9 @@ import {
   SYNC_GOOGLE_BEGIN,
   SYNC_GOOGLE_SUCCESS,
   SYNC_GOOGLE_ERROR,
+  GET_MESSAGES_BEGIN,
+  GET_MESSAGES_SUCCESS,
+  HANDLE_CHANGE,
 } from './action'
 import axios from 'axios'
 
@@ -34,6 +37,12 @@ const initialState = {
   userLocation: location || '',
   showSidebar: false,
   googletoken: null,
+  keyword: '',
+  messages: [],
+  totalMessages: 0,
+  gmai: '',
+  sort: 'latest',
+  sortOptions: ['date', 'work', 'life', 'sentiment'],
 }
 
 const AppContext = React.createContext()
@@ -85,6 +94,7 @@ const AppProvider = ({ children }) => {
     localStorage.removeItem('token')
     localStorage.removeItem('user')
     localStorage.removeItem('location')
+    localStorage.removeItem('googletoken')
   }
 
   const registerUser = async (currentUser) => {
@@ -146,6 +156,7 @@ const AppProvider = ({ children }) => {
     try {
       const { data } = await authFetch.patch('/auth/updateUser', currentUser)
       const { user, location, token } = data
+      console.log(data)
       dispatch({
         type: UPDATE_USER_SUCCESS,
         payload: { user, location, token },
@@ -162,15 +173,66 @@ const AppProvider = ({ children }) => {
     clearAlert()
   }
 
-  const syncGmail = async (access_token) => {
+  const syncGmail = async (res) => {
     dispatch({ type: SYNC_GOOGLE_BEGIN })
-    if (access_token !== undefined) {
-      dispatch({ type: SYNC_GOOGLE_SUCCESS, payload: { access_token } })
-      localStorage.setItem('googletoken', access_token)
+    if (res.access_token !== undefined) {
+      dispatch({
+        type: SYNC_GOOGLE_SUCCESS,
+        payload: { gmail: res.gmail, access_token: res.access_token },
+      })
+      localStorage.setItem('googletoken', res.access_token)
+      localStorage.setItem('gmail', res.gmail)
     } else {
       dispatch({ type: SYNC_GOOGLE_ERROR })
     }
     clearAlert()
+  }
+
+  const fetchGmail = async (keyword) => {
+    dispatch({ type: GET_MESSAGES_BEGIN })
+    try {
+      const { data } = await axios.post('/api/v1/gmail/fetch', keyword)
+      const { result } = data
+      dispatch({
+        type: GET_MESSAGES_SUCCESS,
+        payload: { messages: result, totalMessages: result.length },
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  const getMessages = async () => {
+    const { keyword } = state
+    dispatch({ type: GET_MESSAGES_BEGIN })
+    try {
+      const payload = {
+        gmail: localStorage.getItem('gmail'),
+        accessToken: localStorage.getItem('googletoken'),
+        keyword,
+      }
+
+      const { data } = await axios.post('/api/v1/gmail/fetch', payload)
+      const { result } = data
+      dispatch({
+        type: GET_MESSAGES_SUCCESS,
+        payload: {
+          messages: result,
+          totalMessages: result.length,
+        },
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  const addContact = async (contact) => {
+    try {
+      const { data } = await authFetch.post('/contact/addContact', contact)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  const handleChange = ({ name, value }) => {
+    dispatch({ type: HANDLE_CHANGE, payload: { name, value } })
   }
 
   return (
@@ -184,6 +246,9 @@ const AppProvider = ({ children }) => {
         logoutUser,
         updateUser,
         syncGmail,
+        fetchGmail,
+        getMessages,
+        handleChange,
       }}
     >
       {children}

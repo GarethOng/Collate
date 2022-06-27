@@ -15,6 +15,9 @@ import {
   SYNC_GOOGLE_BEGIN,
   SYNC_GOOGLE_SUCCESS,
   SYNC_GOOGLE_ERROR,
+  GET_MESSAGES_BEGIN,
+  GET_MESSAGES_SUCCESS,
+  HANDLE_CHANGE,
 } from './action'
 import { initialState } from './appContext'
 
@@ -137,8 +140,7 @@ const reducer = (state, action) => {
     return {
       ...state,
       isLoading: false,
-      userLocation: action.payload.location,
-      googletoken: action.payload.googletoken,
+      googletoken: action.payload.access_token,
       showAlert: true,
       alertType: 'success',
       alertText: 'Gmail Account Synced Successfully!',
@@ -153,6 +155,28 @@ const reducer = (state, action) => {
       alertText: 'Gmail Account unable to sync!',
     }
   }
+  if (action.type === GET_MESSAGES_BEGIN) {
+    return {
+      ...state,
+      isLoading: true,
+      showAlert: false,
+    }
+  }
+  if (action.type === GET_MESSAGES_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      messages: action.payload.messages,
+      totalMessages: action.payload.totalMessages,
+    }
+  }
+  if (action.type === HANDLE_CHANGE) {
+    return {
+      ...state,
+      [action.payload.name]: action.payload.value,
+    }
+  }
+
   throw new Error(`no such action: ${action.type}`)
 }
 

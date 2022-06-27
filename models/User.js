@@ -37,14 +37,6 @@ const UserSchema = new mongoose.Schema({
     trim: true,
     default: 'my city',
   },
-  google: {
-    id: {
-      type: String,
-    },
-    acessToken: {
-      type: String,
-    },
-  },
 })
 
 UserSchema.pre('save', async function () {

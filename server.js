@@ -10,6 +10,8 @@ import connectDB from './db/connect.js'
 
 // routers
 import authRouter from './routes/authRoutes.js'
+import gmailRouter from './routes/gmailRoutes.js'
+import contactRouter from './routes/contactRoutes.js'
 
 // middleware
 import notFoundMiddleware from './middleware/not-found.js'
@@ -30,6 +32,8 @@ app.get('/api/v1', (req, res) => {
 })
 
 app.use('/api/v1/auth', authRouter)
+app.use('/api/v1/gmail', gmailRouter)
+app.use('/api/v1/contact', contactRouter)
 
 app.use(notFoundMiddleware)
 app.use(errorHandlerMiddleware)

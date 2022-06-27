@@ -4,5 +4,17 @@ import Alert from './Alert'
 import Navbar from './Navbar'
 import SmallSidebar from './SmallSidebar'
 import BigSidebar from './BigSidebar'
-
-export { Logo, FormRow, Alert, Navbar, SmallSidebar, BigSidebar }
+import FormRowSelect from './FormRowSelect'
+import SearchContainer from './SearchContainer'
+import MessageContainer from './MessageContainer'
+export {
+  Logo,
+  FormRow,
+  Alert,
+  Navbar,
+  SmallSidebar,
+  BigSidebar,
+  FormRowSelect,
+  SearchContainer,
+  MessageContainer,
+}

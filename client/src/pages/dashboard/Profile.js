@@ -6,8 +6,9 @@ import Wrapper from '../../assets/wrappers/DashboardFormPage'
 import { GoogleLogin } from 'react-google-login'
 import { gapi } from 'gapi-script'
 
-const clientID = ''
-const API_KEY = ''
+const clientID =
+  '780119812951-b6ar68tc7tn51rvgmh4dvc6umj60vasf.apps.googleusercontent.com'
+const API_KEY = 'AIzaSyCCc3qbYils2k4-J4xT_Zsd-yyiccDx5wo'
 const GMAIL_SCOPE = 'https://mail.google.com'
 const Profile = () => {
   const { user, showAlert, displayAlert, updateUser, isLoading, syncGmail } =
@@ -28,7 +29,16 @@ const Profile = () => {
   }
 
   const onSuccessGoogle = (res) => {
-    syncGmail(gapi.auth.getToken().access_token)
+    syncGmail({
+      gmail: res.profileObj.email,
+      access_token: gapi.auth.getToken().access_token,
+    })
+    console.log(
+      'user email: ' +
+        res.profileObj.email +
+        'authorization token: ' +
+        gapi.auth.getToken().access_token
+    )
   }
   const onFailureGoogle = (res) => {
     syncGmail(undefined)
@@ -49,7 +59,7 @@ const Profile = () => {
     <React.Fragment>
       <Wrapper>
         <form className='form' onSubmit={handleSubmit}>
-          <h3>profile </h3>
+          <h3>Profile </h3>
           {showAlert && <Alert />}
 
           {/* name */}
@@ -92,7 +102,7 @@ const Profile = () => {
       </Wrapper>
       <Wrapper>
         <form className='form'>
-          <h3>sync account</h3>
+          <h3>Sync Account</h3>
           <div className='form-center'>
             <GoogleLogin
               clientId={clientID}
@@ -105,11 +115,6 @@ const Profile = () => {
             <button className='btn'>telegram</button>
             <button className='btn'>instagram</button>
           </div>
-        </form>
-      </Wrapper>
-      <Wrapper>
-        <form className='form'>
-          <h3>synced account</h3>
         </form>
       </Wrapper>
     </React.Fragment>

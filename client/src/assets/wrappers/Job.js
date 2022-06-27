@@ -26,7 +26,6 @@ const Wrapper = styled.article`
     border-radius: var(--borderRadius);
     font-size: 1.5rem;
     font-weight: 700;
-    text-transform: uppercase;
     color: var(--white);
     margin-right: 2rem;
   }
@@ -36,7 +35,6 @@ const Wrapper = styled.article`
     }
     p {
       margin: 0;
-      text-transform: capitalize;
       color: var(--grey-400);
       letter-spacing: var(--letterSpacing);
     }
@@ -73,7 +71,6 @@ const Wrapper = styled.article`
 
   .status {
     border-radius: var(--borderRadius);
-    text-transform: capitalize;
     letter-spacing: var(--letterSpacing);
     text-align: center;
     width: 100px;
