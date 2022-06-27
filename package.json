@@ -4,11 +4,11 @@
   "description": "This repo contains our National University of Singapore CP2106: Independent Software Development Project",
   "main": "index.js",
   "type": "module",
-  "scripts": {
-    "server": "nodemon server --ignore client",
-    "client": "npm start --prefix client",
-    "start": "concurrently --kill-others-on-fail \"npm run server\" \" npm run client\""
-  },
+ "scripts":{
+    "build-client": "cd client && npm run build",
+    "install-client": "cd client && npm install",
+    "heroku-postbuild": "npm run install-client && npm run build-client",
+},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/GarethOng/Collate.git"
