@@ -14,6 +14,11 @@ Collate aims to benefit users by creating a free to use all-in-one communication
 
 # Deployment
 https://collate-nus.herokuapp.com/landing
+As of 27/6/2022, Google has yet to verify our application. 
+Users will not be able to sync their own gmail account.
+Please use the following gmail account to test out the features:
+Username: collatenustest@gmail.com
+Password: Collatetestaccount12345
 
 # Installing the dependencies
 ```
@@ -66,11 +71,18 @@ A web-based messaging platform to manage all message notifications from the user
 
 Core Features:
 
-## Dashboard/ Home page
-First page upon signing in, where users can view all latest notifications, and can make use of search and filtering functions on their social media based chats. One simple search for a contact/ keyword/ date will search across all the different social media accounts linked.
+## Home page
+If users are signing in for the first time, there will be no messages displayed as user has not synced any of their social media accounts.
+Upon syncing, messages will be fetched directly from Gmail API, Telegram API and Instagram API and displayed clearly on the screen in an alphabetic order. 
+In each message container,
+you will have:
+- Message content
+- Contact
+- Form of Contact (i.e from Gmail/ from Telegram)
+- Reply button that will open your conversation in that specific app in a new tab
 
-## Settings page
-Where users can sync different social media accounts to our centralized platform and modify notification settings.
+## Profile page
+Update form whereby user can update the information behind their page. Also users can sync their social media accounts.
 
 ## Contacts page
 Where users can add contacts and group them according to work, social group or school.
@@ -97,5 +109,7 @@ Where users can add contacts and group them according to work, social group or s
 3. JSON Web Tokens used to authenticate users
 4. POSTMAN used for testing backend
 5. Axios (promise based HTTP client) used to link frontend to backend
-6. 
+
+## Component Diagram
+![alt text](https://github.com/GarethOng/Collate/blob/a61cf5bcad98fdea9f782c7dd23e325b7f075642/IMG_0456.jpg)
 
