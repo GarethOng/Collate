@@ -110,6 +110,9 @@ Where users can add contacts and group them according to work, social group or s
 4. POSTMAN used for testing backend
 5. Axios (promise based HTTP client) used to link frontend to backend
 
+## Schema Diagram
+![alt text](https://github.com/GarethOng/Collate/blob/68ad5557a0f9df5c7ff889575a8d99f7e8832c79/IMG_0457.jpg)
+
 ## Component Diagram
 ![alt text](https://github.com/GarethOng/Collate/blob/a61cf5bcad98fdea9f782c7dd23e325b7f075642/IMG_0456.jpg)
 
