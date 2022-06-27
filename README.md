@@ -117,14 +117,36 @@ The Refresh Token is collected from Google Authentication API which allows us to
 
 ## Component Diagram
 ![alt text](https://github.com/GarethOng/Collate/blob/3d91fe79e0bdc1064f5b78f96060792ffd2790d8/documentation/componentdiagram.jpg)
-
+## Landing Page
 ![alt text](https://github.com/GarethOng/Collate/blob/3d91fe79e0bdc1064f5b78f96060792ffd2790d8/documentation/1landing.jpg)
-![alt text](https://github.com/GarethOng/Collate/blob/3d91fe79e0bdc1064f5b78f96060792ffd2790d8/documentation/2login.jpg)
-![alt text](https://github.com/GarethOng/Collate/blob/3d91fe79e0bdc1064f5b78f96060792ffd2790d8/documentation/3registration.jpg)
-![alt text](https://github.com/GarethOng/Collate/blob/3d91fe79e0bdc1064f5b78f96060792ffd2790d8/documentation/4homepage.jpg)
-![alt text](https://github.com/GarethOng/Collate/blob/3d91fe79e0bdc1064f5b78f96060792ffd2790d8/documentation/5profilepage.jpg)
-![alt text](https://github.com/GarethOng/Collate/blob/3d91fe79e0bdc1064f5b78f96060792ffd2790d8/documentation/6syncsuccessful.jpg)
-![alt text](https://github.com/GarethOng/Collate/blob/3d91fe79e0bdc1064f5b78f96060792ffd2790d8/documentation/7livefeed.jpg)
-![alt text](https://github.com/GarethOng/Collate/blob/3d91fe79e0bdc1064f5b78f96060792ffd2790d8/documentation/8search.jpg)
-![alt text](https://github.com/GarethOng/Collate/blob/3d91fe79e0bdc1064f5b78f96060792ffd2790d8/documentation/9reply.jpg)
+Simple navigation button to our Registration/ Login Page
 
+## Login Page
+![alt text](https://github.com/GarethOng/Collate/blob/3d91fe79e0bdc1064f5b78f96060792ffd2790d8/documentation/2login.jpg)
+
+## Registration Page
+![alt text](https://github.com/GarethOng/Collate/blob/3d91fe79e0bdc1064f5b78f96060792ffd2790d8/documentation/3registration.jpg)
+
+## Home Page
+![alt text](https://github.com/GarethOng/Collate/blob/3d91fe79e0bdc1064f5b78f96060792ffd2790d8/documentation/4homepage.jpg)
+For first time users of collate, they should no be seeing any messages displayed as they have yet to sync any of their social media accounts.
+
+## Profile Page
+![alt text](https://github.com/GarethOng/Collate/blob/3d91fe79e0bdc1064f5b78f96060792ffd2790d8/documentation/5profilepage.jpg)
+Users can navigate to this page to update their profile or sync their social media accounts. As of 27/6, we only have gmail authentication working.
+
+## Successful Registration
+![alt text](https://github.com/GarethOng/Collate/blob/3d91fe79e0bdc1064f5b78f96060792ffd2790d8/documentation/6syncsuccessful.jpg)
+Users should be notified if they manage to sync their gmail account successfully to collate.
+
+## Live Feed
+![alt text](https://github.com/GarethOng/Collate/blob/3d91fe79e0bdc1064f5b78f96060792ffd2790d8/documentation/7livefeed.jpg)
+Upon syncing, the home page will display all incoming messages sorted by newest.
+
+## Search Bar
+![alt text](https://github.com/GarethOng/Collate/blob/3d91fe79e0bdc1064f5b78f96060792ffd2790d8/documentation/8search.jpg)
+Search bar allows you to search for messages accross all your socaial media accounts.
+
+## Reply Button
+![alt text](https://github.com/GarethOng/Collate/blob/3d91fe79e0bdc1064f5b78f96060792ffd2790d8/documentation/9reply.jpg)
+Reply button automatically opens a new a tab allowing u to respond to message very quickly.
