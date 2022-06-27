@@ -111,10 +111,20 @@ Where users can add contacts and group them according to work, social group or s
 5. Axios (promise based HTTP client) used to link frontend to backend
 
 ## Schema Diagram
-![alt text](https://github.com/GarethOng/Collate/blob/68ad5557a0f9df5c7ff889575a8d99f7e8832c79/IMG_0457.jpg)
+![alt text](https://github.com/GarethOng/Collate/blob/3d91fe79e0bdc1064f5b78f96060792ffd2790d8/documentation/userschema.jpg)
 
 The Refresh Token is collected from Google Authentication API which allows us to trade the token for a short-lived Authentication Token that can be used to access user's gmail inbox.
 
 ## Component Diagram
-![alt text](https://github.com/GarethOng/Collate/blob/a61cf5bcad98fdea9f782c7dd23e325b7f075642/IMG_0456.jpg)
+![alt text](https://github.com/GarethOng/Collate/blob/3d91fe79e0bdc1064f5b78f96060792ffd2790d8/documentation/componentdiagram.jpg)
+
+![alt text](https://github.com/GarethOng/Collate/blob/3d91fe79e0bdc1064f5b78f96060792ffd2790d8/documentation/1landing.jpg)
+![alt text](https://github.com/GarethOng/Collate/blob/3d91fe79e0bdc1064f5b78f96060792ffd2790d8/documentation/2login.jpg)
+![alt text](https://github.com/GarethOng/Collate/blob/3d91fe79e0bdc1064f5b78f96060792ffd2790d8/documentation/3registration.jpg)
+![alt text](https://github.com/GarethOng/Collate/blob/3d91fe79e0bdc1064f5b78f96060792ffd2790d8/documentation/4homepage.jpg)
+![alt text](https://github.com/GarethOng/Collate/blob/3d91fe79e0bdc1064f5b78f96060792ffd2790d8/documentation/5profilepage.jpg)
+![alt text](https://github.com/GarethOng/Collate/blob/3d91fe79e0bdc1064f5b78f96060792ffd2790d8/documentation/6syncsuccessful.jpg)
+![alt text](https://github.com/GarethOng/Collate/blob/3d91fe79e0bdc1064f5b78f96060792ffd2790d8/documentation/7livefeed.jpg)
+![alt text](https://github.com/GarethOng/Collate/blob/3d91fe79e0bdc1064f5b78f96060792ffd2790d8/documentation/8search.jpg)
+![alt text](https://github.com/GarethOng/Collate/blob/3d91fe79e0bdc1064f5b78f96060792ffd2790d8/documentation/9reply.jpg)
 
