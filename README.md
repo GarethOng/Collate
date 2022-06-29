@@ -18,7 +18,7 @@ As of 27/6/2022, Google has yet to verify our application.
 Users will not be able to sync their own gmail account.
 Please use the following gmail account to test out the features:
 Username: collatenustest@gmail.com
-Password: Collatetestaccount12345
+Password: Collateorbitaltestaccount123
 
 # Installing the dependencies
 ```
