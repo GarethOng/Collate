@@ -1,1 +1,1 @@
-vaderSentiment.vaderSentiment
+vaderSentiment
