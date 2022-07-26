@@ -27,7 +27,7 @@ const MessageSchema = new mongoose.Schema({
   },
   relationship: {
     type: String,
-    enum: ['unclassified', 'friends', 'work', 'school'],
+    enum: ['unclassified', 'customer', 'business partner', 'others'],
     default: 'unclassified',
   },
   email: {
