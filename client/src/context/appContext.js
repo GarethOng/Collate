@@ -20,12 +20,21 @@ import {
   GET_MESSAGES_BEGIN,
   GET_MESSAGES_SUCCESS,
   HANDLE_CHANGE,
+  GET_CONTACTS_BEGIN,
+  GET_CONTACTS_SUCCESS,
+  SET_EDIT_CONTACTS,
+  EDIT_CONTACT_BEGIN,
+  EDIT_CONTACT_SUCCESS,
+  EDIT_CONTACT_ERROR,
+  SYNC_TELEGRAM_BEGIN,
+  SYNC_TELEGRAM_ERROR,
+  SYNC_TELEGRAM_SUCCESS,
 } from './action'
 import axios from 'axios'
 
 const token = localStorage.getItem('token')
 const user = localStorage.getItem('user')
-const location = localStorage.getItem('location')
+const googletoken = localStorage.getItem('googletoken')
 
 const initialState = {
   isLoading: false,
@@ -34,15 +43,31 @@ const initialState = {
   alertType: '',
   user: user ? JSON.parse(user) : null,
   token: token,
-  userLocation: location || '',
   showSidebar: false,
-  googletoken: null,
+  googletoken: googletoken,
+  telegramtoken: '',
   keyword: '',
+  contactSearch: '',
   messages: [],
   totalMessages: 0,
-  gmai: '',
+  gmail: '',
   sort: 'latest',
-  sortOptions: ['date', 'work', 'life', 'sentiment'],
+  contactKeyword: '',
+  sortOptions: ['latest', 'negative-positive'],
+  contactSort: 'default',
+  contactOptions: ['unclassified', 'customer', 'business partner', 'others'],
+  filter: 'unclassified',
+  contactType: 'unclassified',
+  contacts: [],
+  totalContacts: 0,
+  isEditing: false,
+  editContactId: '',
+  editContactName: '',
+  editContactGmail: '',
+  editContactRelationship: '',
+  editTelegram: '',
+  showRead: 'only unread',
+  showReadOption: ['all', 'only unread'],
 }
 
 const AppContext = React.createContext()
@@ -85,32 +110,30 @@ const AppProvider = ({ children }) => {
       dispatch({ type: CLEAR_ALERT })
     }, 3000)
   }
-  const addUserToLocalStorage = ({ user, token, location }) => {
+  const addUserToLocalStorage = ({ user, token }) => {
     localStorage.setItem('user', JSON.stringify(user))
     localStorage.setItem('token', token)
-    localStorage.setItem('location', location)
   }
   const removeUserFromLocalStorage = () => {
     localStorage.removeItem('token')
     localStorage.removeItem('user')
-    localStorage.removeItem('location')
     localStorage.removeItem('googletoken')
+    localStorage.removeItem('telegramtoke ')
   }
 
   const registerUser = async (currentUser) => {
     dispatch({ type: REGISTER_USER_BEGIN })
     try {
       const response = await axios.post('/api/v1/auth/register', currentUser)
-      const { user, token, location } = response.data
+      const { user, token } = response.data
       dispatch({
         type: REGISTER_USER_SUCCESS,
         payload: {
           user,
           token,
-          location,
         },
       })
-      addUserToLocalStorage({ user, token, location })
+      addUserToLocalStorage({ user, token })
     } catch (error) {
       console.log(error.response)
       dispatch({
@@ -125,14 +148,14 @@ const AppProvider = ({ children }) => {
     dispatch({ type: LOGIN_USER_BEGIN })
     try {
       const { data } = await axios.post('/api/v1/auth/login', currentUser)
-      const { user, token, location } = data
+      const { user, token } = data
 
       dispatch({
         type: LOGIN_USER_SUCCESS,
-        payload: { user, token, location },
+        payload: { user, token },
       })
 
-      addUserToLocalStorage({ user, token, location })
+      addUserToLocalStorage({ user, token })
     } catch (error) {
       dispatch({
         type: LOGIN_USER_ERROR,
@@ -155,13 +178,12 @@ const AppProvider = ({ children }) => {
     dispatch({ type: UPDATE_USER_BEGIN })
     try {
       const { data } = await authFetch.patch('/auth/updateUser', currentUser)
-      const { user, location, token } = data
-      console.log(data)
+      const { user, token } = data
       dispatch({
         type: UPDATE_USER_SUCCESS,
-        payload: { user, location, token },
+        payload: { user, token },
       })
-      addUserToLocalStorage({ user, location, token })
+      addUserToLocalStorage({ user, token })
     } catch (error) {
       if (error.response.status !== 401) {
         dispatch({
@@ -176,42 +198,71 @@ const AppProvider = ({ children }) => {
   const syncGmail = async (res) => {
     dispatch({ type: SYNC_GOOGLE_BEGIN })
     if (res.access_token !== undefined) {
+      localStorage.setItem('googletoken', res.access_token)
+      localStorage.setItem('gmail', res.gmail)
+      await getGmail()
       dispatch({
         type: SYNC_GOOGLE_SUCCESS,
         payload: { gmail: res.gmail, access_token: res.access_token },
       })
-      localStorage.setItem('googletoken', res.access_token)
-      localStorage.setItem('gmail', res.gmail)
     } else {
       dispatch({ type: SYNC_GOOGLE_ERROR })
     }
     clearAlert()
   }
 
-  const fetchGmail = async (keyword) => {
-    dispatch({ type: GET_MESSAGES_BEGIN })
+  const syncTelegram = async (token) => {
     try {
-      const { data } = await axios.post('/api/v1/gmail/fetch', keyword)
-      const { result } = data
+      dispatch({ type: SYNC_TELEGRAM_BEGIN })
+      localStorage.setItem('telegramtoken', token)
+      await getTelegram()
       dispatch({
-        type: GET_MESSAGES_SUCCESS,
-        payload: { messages: result, totalMessages: result.length },
+        type: SYNC_TELEGRAM_SUCCESS,
+        payload: {
+          access_token: token,
+        },
       })
+    } catch (error) {
+      dispatch({ type: SYNC_TELEGRAM_ERROR })
+    }
+  }
+
+  const getGmail = async () => {
+    const gmail = localStorage.getItem('gmail')
+    const googletoken = localStorage.getItem('googletoken')
+    try {
+      const payload = {
+        gmail,
+        googletoken,
+      }
+      await authFetch.post('/gmail/fetch', payload)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const getTelegram = async () => {
+    try {
+      const payload = {
+        token: localStorage.getItem('telegramtoken'),
+      }
+      await authFetch.post('/telegram/fetch', payload)
     } catch (error) {
       console.log(error)
     }
   }
   const getMessages = async () => {
-    const { keyword } = state
+    const { keyword, contactSearch, sort, filter } = state
     dispatch({ type: GET_MESSAGES_BEGIN })
     try {
       const payload = {
-        gmail: localStorage.getItem('gmail'),
-        accessToken: localStorage.getItem('googletoken'),
         keyword,
+        contactSearch,
+        sortOption: sort,
+        relationship: filter,
       }
+      const { data } = await authFetch.post('/message/getMessage', payload)
 
-      const { data } = await axios.post('/api/v1/gmail/fetch', payload)
       const { result } = data
       dispatch({
         type: GET_MESSAGES_SUCCESS,
@@ -224,17 +275,62 @@ const AppProvider = ({ children }) => {
       console.log(error)
     }
   }
-  const addContact = async (contact) => {
-    try {
-      const { data } = await authFetch.post('/contact/addContact', contact)
-    } catch (error) {
-      console.log(error)
-    }
-  }
   const handleChange = ({ name, value }) => {
     dispatch({ type: HANDLE_CHANGE, payload: { name, value } })
   }
 
+  const getContacts = async () => {
+    const { contactKeyword, contactType } = state
+    let url = `/contact/getAllContact?keyword=${contactKeyword}&relationship=${contactType}`
+    dispatch({ type: GET_CONTACTS_BEGIN })
+    try {
+      const { data } = await authFetch(url)
+      const { contacts, totalContacts } = data
+      dispatch({
+        type: GET_CONTACTS_SUCCESS,
+        payload: {
+          contacts: contacts,
+          totalContacts: totalContacts,
+        },
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const setEditContact = (id) => {
+    dispatch({ type: SET_EDIT_CONTACTS, payload: { id } })
+  }
+
+  const editContact = async () => {
+    dispatch({ type: EDIT_CONTACT_BEGIN })
+    try {
+      const {
+        editContactName,
+        editContactGmail,
+        editContactRelationship,
+        editTelegram,
+      } = state
+      await authFetch.patch(`/contact/${state.editContactId}`, {
+        name: editContactName,
+        email: editContactGmail,
+        relationship: editContactRelationship,
+        telegram: editTelegram,
+      })
+      dispatch({ type: EDIT_CONTACT_SUCCESS })
+    } catch (error) {
+      if (error.response.status === 401) return
+      dispatch({
+        type: EDIT_CONTACT_ERROR,
+        payload: { msg: error.response.data.msg },
+      })
+    }
+    clearAlert()
+  }
+
+  const markRead = async (messageId) => {
+    await authFetch.post('/message/markRead', { messageId })
+  }
   return (
     <AppContext.Provider
       value={{
@@ -246,9 +342,13 @@ const AppProvider = ({ children }) => {
         logoutUser,
         updateUser,
         syncGmail,
-        fetchGmail,
+        syncTelegram,
         getMessages,
         handleChange,
+        getContacts,
+        setEditContact,
+        editContact,
+        markRead,
       }}
     >
       {children}

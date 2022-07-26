@@ -15,9 +15,18 @@ import {
   SYNC_GOOGLE_BEGIN,
   SYNC_GOOGLE_SUCCESS,
   SYNC_GOOGLE_ERROR,
+  SYNC_TELEGRAM_BEGIN,
+  SYNC_TELEGRAM_ERROR,
+  SYNC_TELEGRAM_SUCCESS,
   GET_MESSAGES_BEGIN,
   GET_MESSAGES_SUCCESS,
   HANDLE_CHANGE,
+  GET_CONTACTS_BEGIN,
+  GET_CONTACTS_SUCCESS,
+  SET_EDIT_CONTACTS,
+  EDIT_CONTACT_BEGIN,
+  EDIT_CONTACT_SUCCESS,
+  EDIT_CONTACT_ERROR,
 } from './action'
 import { initialState } from './appContext'
 
@@ -46,7 +55,6 @@ const reducer = (state, action) => {
       ...state,
       user: action.payload.user,
       token: action.payload.token,
-      userLocation: action.payload.location,
       isLoading: false,
       showAlert: true,
       alertType: 'success',
@@ -74,7 +82,6 @@ const reducer = (state, action) => {
       isLoading: false,
       user: action.payload.user,
       token: action.payload.token,
-      userLocation: action.payload.location,
       showAlert: true,
       alertType: 'success',
       alertText: 'Login Successful! Redirecting...',
@@ -100,7 +107,6 @@ const reducer = (state, action) => {
       ...initialState,
       user: null,
       token: null,
-      userLocation: '',
     }
   }
   if (action.type === UPDATE_USER_BEGIN) {
@@ -115,7 +121,6 @@ const reducer = (state, action) => {
       isLoading: false,
       user: action.payload.user,
       token: action.payload.token,
-      userLocation: action.payload.location,
       showAlert: true,
       alertType: 'success',
       alertText: 'User Profile Updated!',
@@ -155,6 +160,31 @@ const reducer = (state, action) => {
       alertText: 'Gmail Account unable to sync!',
     }
   }
+  if (action.type === SYNC_TELEGRAM_BEGIN) {
+    return {
+      ...state,
+      isLoading: true,
+    }
+  }
+  if (action.type === SYNC_TELEGRAM_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      telegramtoken: action.payload.access_token,
+      showAlert: true,
+      alertType: 'success',
+      alertText: 'Telegram Account Synced Successfully!',
+    }
+  }
+  if (action.type === SYNC_TELEGRAM_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: 'danger',
+      alertText: 'Telegram Account unable to sync!',
+    }
+  }
   if (action.type === GET_MESSAGES_BEGIN) {
     return {
       ...state,
@@ -174,6 +204,58 @@ const reducer = (state, action) => {
     return {
       ...state,
       [action.payload.name]: action.payload.value,
+    }
+  }
+  if (action.type === GET_CONTACTS_BEGIN) {
+    return {
+      ...state,
+      isLoading: true,
+      showAlert: false,
+    }
+  }
+  if (action.type === GET_CONTACTS_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      contacts: action.payload.contacts,
+      totalContacts: action.payload.totalContacts,
+    }
+  }
+
+  if (action.type === SET_EDIT_CONTACTS) {
+    const contact = state.contacts.find(
+      (contact) => contact._id === action.payload.id
+    )
+    const { _id, name, gmail, relationship, telegram } = contact
+    return {
+      ...state,
+      isEditing: true,
+      editContactId: _id,
+      editContactName: name,
+      editContactGmail: gmail,
+      editContactRelationship: relationship,
+      editTelegram: telegram,
+    }
+  }
+  if (action.type === EDIT_CONTACT_BEGIN) {
+    return { ...state, isLoading: true }
+  }
+  if (action.type === EDIT_CONTACT_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: 'success',
+      alertText: 'Contact Updated!',
+    }
+  }
+  if (action.type === EDIT_CONTACT_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: 'danger',
+      alertText: action.payload.msg,
     }
   }
 

@@ -1,36 +1,43 @@
-import { FaLocationArrow, FaBriefcase, FaReply } from 'react-icons/fa'
-import { Link } from 'react-router-dom'
-import { useAppContext } from '../context/appContext'
-import Wrapper from '../assets/wrappers/Job'
+import Wrapper from '../assets/wrappers/Job.js'
 import MessageInfo from './MessageInfo'
+import { useAppContext } from '../context/appContext.js'
+import moment from 'moment'
 
-const Message = ({ body, email, name, date, link }) => {
+const Message = ({ body, from, name, date, link, messageId }) => {
   const onReply = () => {
     window.open(link, '_blank')
   }
+  const read = () => {
+    markRead(messageId)
+    window.location.reload()
+  }
+  const { markRead } = useAppContext()
   return (
     <Wrapper>
       <header>
         <div className='main-icon'>{name.charAt(0)}</div>
         <div className='info'>
-          <h5>{body}</h5>
-          <h5>
-            Received from: {name} <p>{email}</p>
-          </h5>
-          <p>{date}</p>
-          <div className='content-center'>
-            <button className='btn btn-block' onClick={onReply}>
+          <h4>body: {body.substring(0, 225)}</h4>
+          <h4>received from: {name}</h4>
+          <h4>{from}</h4>
+          <h4>{moment(date).format('dddd, MMMM Do YYYY')}</h4>
+          <h4>{moment(date).format('h:mm:ss a')}</h4>
+        </div>
+      </header>
+      <footer>
+        <div className='jobs'>
+          <div className='actions'>
+            <button className='btn' onClick={onReply}>
               reply
             </button>
           </div>
+          <div className='actions'>
+            <button className='btn' onClick={read}>
+              Readed
+            </button>
+          </div>
         </div>
-      </header>
-      <div className='content'>
-        <div className='content-center'></div>
-        <footer>
-          <div className='actions'></div>
-        </footer>
-      </div>
+      </footer>
     </Wrapper>
   )
 }

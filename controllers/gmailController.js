@@ -1,18 +1,23 @@
 import { StatusCodes } from 'http-status-codes'
 import { BadRequestError, UnauthenticatedError } from '../errors/index.js'
 import axios from 'axios'
+import moment from 'moment'
+import Message from '../models/Message.js'
+import Contact from '../models/Contact.js'
+import { sentimentAnalysis } from '../server.js'
 
 class GmailAPI {
   accessToken = ''
-  constructor(accessToken) {
+  userId = ''
+  constructor(accessToken, userId) {
     this.accessToken = accessToken
+    this.userId = userId
   }
 
-  searchGmail = async (searchItem) => {
+  searchGmail = async () => {
     var config = {
       method: 'get',
-      url:
-        'https://www.googleapis.com/gmail/v1/users/me/messages?q=' + searchItem,
+      url: 'https://www.googleapis.com/gmail/v1/users/me/messages?q=',
       headers: {
         Authorization: `Bearer ${this.accessToken} `,
       },
@@ -55,8 +60,8 @@ class GmailAPI {
     return data
   }
 
-  readInboxContent = async (searchText, gmail) => {
-    var threadId = await this.searchGmail(searchText)
+  readInboxContent = async (gmail) => {
+    var threadId = await this.searchGmail()
 
     threadId = await Promise.all(
       threadId.map(async (x) => {
@@ -65,7 +70,15 @@ class GmailAPI {
     )
     threadId = await Promise.all(
       threadId.map(async (x) => {
-        let content = { body: '', email: '', name: '', date: '', link: '' }
+        let content = {
+          threadId: '',
+          body: '',
+          email: '',
+          name: '',
+          date: '',
+          link: '',
+        }
+        content.threadId = x.threadId
         if (x.payload['parts']) {
           content.body = Buffer.from(
             x.payload['parts'][0].body.data,
@@ -89,6 +102,21 @@ class GmailAPI {
             content.date = y.value
           }
         })
+        await Message.updateOne(
+          { createdBy: this.userId, messageId: content.threadId },
+          {
+            createdBy: this.userId,
+            messageSource: 'gmail',
+            messageId: content.threadId,
+            name: content.name,
+            date: moment.parseZone(content.date).format(),
+            body: content.body,
+            email: content.email,
+            link: content.link,
+            sentiment: await sentimentAnalysis(content.body),
+          },
+          { upsert: true }
+        )
         return content
       })
     )
@@ -97,11 +125,28 @@ class GmailAPI {
 }
 
 const fetchMail = async (req, res) => {
-  const { gmail, accessToken, keyword } = req.body
-  const mail = new GmailAPI(accessToken)
-  const result = await mail.readInboxContent(keyword, gmail)
-  res.status(StatusCodes.OK).json({
-    result,
+  const userId = req.user.userId
+  const { gmail, googletoken } = req.body
+  const mail = new GmailAPI(googletoken, userId)
+  const result = await mail.readInboxContent(gmail)
+  res.status(StatusCodes.OK).json({ result })
+  result.map(async (x) => {
+    await Contact.updateOne(
+      {
+        $or: [
+          { name: { $regex: x.name, $options: 'i' } },
+          { gmail: { $regex: x.email, $options: 'i' } },
+          { gmail: { $regex: x.name, $options: 'i' } },
+        ],
+        createdBy: userId,
+      },
+      {
+        name: x.name,
+        gmail: x.email,
+        createdBy: userId,
+      },
+      { upsert: true }
+    )
   })
 }
 

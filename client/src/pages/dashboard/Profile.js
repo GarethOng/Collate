@@ -11,21 +11,38 @@ const clientID =
 const API_KEY = 'AIzaSyCCc3qbYils2k4-J4xT_Zsd-yyiccDx5wo'
 const GMAIL_SCOPE = 'https://mail.google.com'
 const Profile = () => {
-  const { user, showAlert, displayAlert, updateUser, isLoading, syncGmail } =
-    useAppContext()
+  const {
+    user,
+    showAlert,
+    displayAlert,
+    updateUser,
+    isLoading,
+    syncGmail,
+    telegramtoken,
+    syncTelegram,
+  } = useAppContext()
   const [name, setName] = useState(user?.name)
   const [email, setEmail] = useState(user?.email)
   const [lastName, setLastName] = useState(user?.lastName)
-  const [location, setLocation] = useState(user?.location)
+  const [telegramToken, setTelegramToken] = useState(telegramtoken)
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    if (!name || !email || !lastName || !location) {
+    if (!name || !email || !lastName) {
       // test and remove temporary
       displayAlert()
       return
     }
-    updateUser({ name, email, lastName, location })
+    updateUser({ name, email, lastName })
+  }
+
+  const handleTelegramSubmit = (e) => {
+    e.preventDefault()
+    if (!telegramToken) {
+      displayAlert()
+      return
+    }
+    syncTelegram(telegramToken)
   }
 
   const onSuccessGoogle = (res) => {
@@ -33,12 +50,6 @@ const Profile = () => {
       gmail: res.profileObj.email,
       access_token: gapi.auth.getToken().access_token,
     })
-    console.log(
-      'user email: ' +
-        res.profileObj.email +
-        'authorization token: ' +
-        gapi.auth.getToken().access_token
-    )
   }
   const onFailureGoogle = (res) => {
     syncGmail(undefined)
@@ -53,7 +64,7 @@ const Profile = () => {
       })
     }
     gapi.load('client:auth2', start)
-  })
+  }, [])
 
   return (
     <React.Fragment>
@@ -83,13 +94,6 @@ const Profile = () => {
               value={email}
               handleChange={(e) => setEmail(e.target.value)}
             />
-
-            <FormRow
-              type='text'
-              name='location'
-              value={location}
-              handleChange={(e) => setLocation(e.target.value)}
-            />
             <button
               className='btn btn-block'
               type='submit'
@@ -112,8 +116,25 @@ const Profile = () => {
               onFailure={onFailureGoogle}
               isSignedIn={true}
             ></GoogleLogin>
-            <button className='btn'>telegram</button>
-            <button className='btn'>instagram</button>
+          </div>
+        </form>
+      </Wrapper>
+      <Wrapper>
+        <form className='form' onSubmit={handleTelegramSubmit}>
+          <div className='form-center'>
+            <FormRow
+              type='password'
+              name='Telegram API Key'
+              value={telegramToken}
+              handleChange={(e) => setTelegramToken(e.target.value)}
+            />
+            <button
+              className='btn btn-block'
+              type='submit'
+              disabled={isLoading}
+            >
+              {isLoading ? 'Please Wait...' : 'sync Telegram'}
+            </button>
           </div>
         </form>
       </Wrapper>

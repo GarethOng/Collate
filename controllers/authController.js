@@ -18,11 +18,9 @@ const register = async (req, res) => {
     user: {
       email: user.email,
       lastName: user.lastName,
-      location: user.location,
       name: user.name,
     },
     token,
-    location: user.location,
   })
 }
 
@@ -42,11 +40,11 @@ const login = async (req, res) => {
   }
   const token = user.createJWT()
   user.password = undefined
-  res.status(StatusCodes.OK).json({ user, token, location: user.location })
+  res.status(StatusCodes.OK).json({ user, token })
 }
 
 const updateUser = async (req, res) => {
-  const { email, name, lastName, location } = req.body
+  const { email, name, lastName } = req.body
   if (!email) {
     throw new BadRequestError('no email')
   }
@@ -56,10 +54,8 @@ const updateUser = async (req, res) => {
   if (!lastName) {
     throw new BadRequestError('no lastName')
   }
-  if (!location) {
-    throw new BadRequestError('no location')
-  }
-  if (!email || !name || !lastName || !location) {
+
+  if (!email || !name || !lastName) {
     throw new BadRequestError('Please provide all values')
   }
 
@@ -68,16 +64,14 @@ const updateUser = async (req, res) => {
   user.email = email
   user.name = name
   user.lastName = lastName
-  user.location = location
 
   await user.save()
 
   const token = user.createJWT()
-  console.log({ user, token, location: user.location })
+  console.log({ user, token })
   res.status(StatusCodes.OK).json({
     user,
     token,
-    location: user.location,
   })
 }
 

@@ -1,7 +1,12 @@
 import React from 'react'
-
+import { ContactSearchContainer, ContactContainer } from '../../components'
 function Setting() {
-  return <div>Contact</div>
+  return (
+    <>
+      <ContactSearchContainer />
+      <ContactContainer />
+    </>
+  )
 }
 
 export default Setting

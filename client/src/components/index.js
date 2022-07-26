@@ -7,6 +7,9 @@ import BigSidebar from './BigSidebar'
 import FormRowSelect from './FormRowSelect'
 import SearchContainer from './SearchContainer'
 import MessageContainer from './MessageContainer'
+import ContactContainer from './ContactContainer'
+import ContactSearchContainer from './ContactSearchContainer'
+
 export {
   Logo,
   FormRow,
@@ -17,4 +20,6 @@ export {
   FormRowSelect,
   SearchContainer,
   MessageContainer,
+  ContactContainer,
+  ContactSearchContainer,
 }

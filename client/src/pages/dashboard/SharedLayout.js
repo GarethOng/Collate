@@ -10,7 +10,7 @@ function SharedLayout() {
         <BigSidebar />
         <div>
           <Navbar />
-          <div className='dashbaord-page'>
+          <div className='dashboard-page'>
             <Outlet />
           </div>
         </div>

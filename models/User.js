@@ -31,11 +31,9 @@ const UserSchema = new mongoose.Schema({
     trim: true,
     default: 'lastName',
   },
-  location: {
+  telegramToken: {
     type: String,
-    maxlength: 20,
-    trim: true,
-    default: 'my city',
+    select: false,
   },
 })
 

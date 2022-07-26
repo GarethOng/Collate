@@ -2,14 +2,23 @@ import { useAppContext } from '../context/appContext'
 import { useEffect } from 'react'
 import Loading from './Loading'
 import Message from './Message'
-import Wrapper from '../assets/wrappers/SearchContainer'
+import Wrapper from '../assets/wrappers/JobsContainer'
 
 function MessageContainer() {
-  const { getMessages, messages, totalMessages, isLoading, keyword } =
-    useAppContext()
+  const {
+    getMessages,
+    messages,
+    totalMessages,
+    isLoading,
+    keyword,
+    contactSearch,
+    sort,
+    filter,
+    showRead,
+  } = useAppContext()
   useEffect(() => {
     getMessages()
-  }, [keyword])
+  }, [keyword, contactSearch, sort, filter])
   if (isLoading) {
     return <Loading center />
   }
@@ -22,21 +31,46 @@ function MessageContainer() {
   }
   return (
     <Wrapper>
-      <h5>
-        {totalMessages} Message{totalMessages > 1 && 's'} found
-      </h5>
       <div className='jobs'>
         {messages.map((message) => {
-          return (
-            <Message
-              key={messages.indexOf(message)}
-              body={message.body}
-              email={message.email}
-              name={message.name}
-              date={message.date}
-              link={message.link}
-            />
-          )
+          if (showRead === 'all' && message.body) {
+            return (
+              <Message
+                key={messages.indexOf(message)}
+                body={message.body}
+                email={message.email}
+                name={message.name}
+                date={message.date}
+                link={message.link}
+                messageId={message.messageId}
+                messageSource={message.messageSource}
+                from={
+                  message.messageSource === 'gmail'
+                    ? message.email
+                    : message.handle
+                }
+              />
+            )
+          }
+          if (showRead === 'only unread' && !message.read && message.body) {
+            return (
+              <Message
+                key={messages.indexOf(message)}
+                body={message.body}
+                email={message.email}
+                name={message.name}
+                date={message.date}
+                link={message.link}
+                messageId={message.messageId}
+                messageSource={message.messageSource}
+                from={
+                  message.messageSource === 'gmail'
+                    ? message.email
+                    : message.handle
+                }
+              />
+            )
+          }
         })}
       </div>
     </Wrapper>

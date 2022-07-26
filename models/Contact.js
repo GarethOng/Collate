@@ -6,7 +6,7 @@ const ContactSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please provide name'],
     minlength: 3,
-    maxlength: 20,
+    maxlength: 50,
     trim: true,
   },
   gmail: {
@@ -16,8 +16,13 @@ const ContactSchema = new mongoose.Schema({
       message: 'Please provide a valid gmail account',
     },
   },
+  telegram: {
+    type: String,
+  },
   relationship: {
     type: String,
+    enum: ['unclassified', 'friends', 'work', 'school'],
+    default: 'unclassified',
   },
   createdBy: {
     type: mongoose.Types.ObjectId,
