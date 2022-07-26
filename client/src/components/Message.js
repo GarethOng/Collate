@@ -33,7 +33,7 @@ const Message = ({ body, from, name, date, link, messageId }) => {
           </div>
           <div className='actions'>
             <button className='btn' onClick={read}>
-              Readed
+              mark as read
             </button>
           </div>
         </div>

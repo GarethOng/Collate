@@ -20,16 +20,16 @@ import notFoundMiddleware from './middleware/not-found.js'
 import errorHandlerMiddleware from './middleware/error-handler.js'
 
 // production
-//import { dirname } from 'path'
-//import { fileURLToPath } from 'url'
-//import path from 'path'
-//const __dirname = dirname(fileURLToPath(import.meta.url))
+import { dirname } from 'path'
+import { fileURLToPath } from 'url'
+import path from 'path'
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 if (process.env.NODE_ENV !== 'production') {
   app.use(morgan('dev'))
 }
 
-//app.use(express.static(path.resolve(__dirname, './client/build')))
+app.use(express.static(path.resolve(__dirname, './client/build')))
 
 app.use(express.json())
 
@@ -76,9 +76,9 @@ app.use('/api/v1/contact', contactRouter)
 app.use('/api/v1/message', messageRouter)
 app.use('/api/v1/telegram', telegramRouter)
 
-//app.get('*', function (request, response) {
-//  response.sendFile(path.resolve(__dirname, './client/build', 'index.html'))
-//})
+app.get('*', function (request, response) {
+  response.sendFile(path.resolve(__dirname, './client/build', 'index.html'))
+})
 
 app.use(notFoundMiddleware)
 app.use(errorHandlerMiddleware)
