@@ -150,3 +150,10 @@ Search bar allows you to search for messages accross all your socaial media acco
 ## Reply Button
 ![alt text](https://github.com/GarethOng/Collate/blob/3d91fe79e0bdc1064f5b78f96060792ffd2790d8/documentation/9reply.jpg)
 Reply button automatically opens a new a tab allowing u to respond to message very quickly.
+
+# Milestone 3 Submission Updates
+
+## Fetched Messages
+![alt text]
+(https://github.com/GarethOng/Collate/blob/7de9a67f87dd546ec6b7aa7e5595de6c882cfb1b/documentation/fetchedMessages.jpg)
+Improved UI with more advanced search form for users to search for messages.
