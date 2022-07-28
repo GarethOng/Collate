@@ -109,6 +109,7 @@ Where users can add contacts and group them according to work, social group or s
 3. JSON Web Tokens used to authenticate users
 4. POSTMAN used for testing backend
 5. Axios (promise based HTTP client) used to link frontend to backend
+6. VaderSentiment Analysis to give a sentiment rating to each message fetched. Sentiment rating from -1 (very negative/ harsh feedbacks) to +1 (very positive/ happy feedbacks).
 
 ## Schema Diagram
 ![alt text](https://github.com/GarethOng/Collate/blob/3d91fe79e0bdc1064f5b78f96060792ffd2790d8/documentation/userschema.jpg)
