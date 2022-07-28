@@ -154,6 +154,24 @@ Reply button automatically opens a new a tab allowing u to respond to message ve
 # Milestone 3 Submission Updates
 
 ## Fetched Messages
-![alt text]
-(https://github.com/GarethOng/Collate/blob/7de9a67f87dd546ec6b7aa7e5595de6c882cfb1b/documentation/fetchedMessages.jpg)
+![alt text](https://github.com/GarethOng/Collate/blob/7de9a67f87dd546ec6b7aa7e5595de6c882cfb1b/documentation/fetchedMessages.jpg)
 Improved UI with more advanced search form for users to search for messages.
+
+## Fetched Contacts
+![alt text](https://github.com/GarethOng/Collate/blob/67ee41d5182c6c390c42caf17a47211572cfa188/documentation/fetchedContacts.jpg)
+Collate automatically collects contact information from you gmail account upon syncing.
+
+## Sync Telegram Account
+![alt text](https://github.com/GarethOng/Collate/blob/67ee41d5182c6c390c42caf17a47211572cfa188/documentation/syncedTelegram.jpg)
+Collate supports Telegram.
+
+## Contact Matching
+![alt text](https://github.com/GarethOng/Collate/blob/67ee41d5182c6c390c42caf17a47211572cfa188/documentation/contactMatching.jpg)
+Collate will automatically update contact information as you sync Telegram account whereby contact card will display both the Gmail account and Telegram handle of a contact.
+
+## Sentiment Analysis
+![alt text](https://github.com/GarethOng/Collate/blob/67ee41d5182c6c390c42caf17a47211572cfa188/documentation/sentimentAnalysis.jpg)
+Collate does Sentiment Analysis on the messages and allow users to rank them from most negative to least negative.
+
+
+
